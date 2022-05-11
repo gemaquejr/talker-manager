@@ -30,8 +30,24 @@ app.get('/talker', async (_req, res) => {
     return res.status(200).json(datas);
     });
 
-  app.post('/login', (req, res) => 
-    res.status(200).json({ token: crypto.randomBytes(8).toString('hex') }));
+  app.post('/login', (req, res) => {
+    // regex consultada em: https://github.com/balajiadmane/JQuery-Validate-Email/blob/master/index.html
+    const regex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    const { email, password } = req.body;
+    if (email === undefined) {
+      return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+    }
+    if (!regex.test(email)) {
+      return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+    }
+    if (password === undefined) {
+      return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+    }
+    res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
+  });
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
