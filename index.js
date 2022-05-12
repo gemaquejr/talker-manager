@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const crypto = require('crypto');
+const {
+  ageRequired, nameRequired, talkRequired, rateValidate, watchedAtValidate, tokenValidate,
+} = require('./middlewares/index');
 
 const app = express();
 app.use(bodyParser.json());
@@ -10,6 +13,11 @@ app.use(bodyParser.json());
 async function readTalkers() {
   const data = await fs.readFile('./talker.json', 'utf8');
   return JSON.parse(data);
+}
+
+async function writeTalkers(setData) {
+  const data = await fs.writeFile('./talker.json', setData);
+  return JSON.stringify(data, null, 2);
 }
 
 app.get('/talker', async (_req, res) => {
@@ -48,6 +56,27 @@ app.get('/talker', async (_req, res) => {
     }
     res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
   });
+
+  // Ajuda do monitor Rafael Carvalho
+
+  app.post(
+    '/talker',
+    tokenValidate,
+    nameRequired,
+    ageRequired,
+    talkRequired,
+    rateValidate,
+    watchedAtValidate,
+    async (req, res) => {
+    const { name, age, talk } = req.body;
+    const data = await readTalkers();
+    console.log(data);
+    const addTalker = { id: data.length + 1, name, age, talk };
+    const newTalker = JSON.stringify([...data, addTalker]);
+    await writeTalkers(newTalker);
+    res.status(201).json(addTalker);
+  },
+);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
