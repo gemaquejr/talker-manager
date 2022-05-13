@@ -20,6 +20,17 @@ async function writeTalkers(setData) {
   return JSON.stringify(data, null, 2);
 }
 
+app.get(
+  '/talker/search',
+  tokenValidate,
+  async (req, res) => {
+  const { q } = req.query;
+  const data = await readTalkers();
+  const searchTerm = data.filter((talker) => talker.name.includes(q));    
+  return res.status(200).json(searchTerm);
+  },
+);
+
 app.get('/talker', async (_req, res) => {
   const data = await readTalkers();
   if (data.length === 0) {
