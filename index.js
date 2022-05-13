@@ -70,13 +70,32 @@ app.get('/talker', async (_req, res) => {
     async (req, res) => {
     const { name, age, talk } = req.body;
     const data = await readTalkers();
-    console.log(data);
     const addTalker = { id: data.length + 1, name, age, talk };
     const newTalker = JSON.stringify([...data, addTalker]);
     await writeTalkers(newTalker);
     res.status(201).json(addTalker);
   },
 );
+
+  app.put(
+    '/talker/:id',
+    tokenValidate,
+    nameRequired,
+    ageRequired,
+    talkRequired,
+    rateValidate,
+    watchedAtValidate,
+    async (req, res) => {
+    const { id } = req.params;
+    const data = await readTalkers();
+    const { name, age, talk } = req.body;
+    const dataIndex = data.findIndex((talker) => talker.id === +id);
+    data[dataIndex] = { ...data[dataIndex], name, age, talk };
+    
+    await writeTalkers(JSON.stringify(data));
+    return res.status(200).json({ name, age, talk, id: +id });
+    },
+  );
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
