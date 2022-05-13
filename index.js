@@ -97,6 +97,18 @@ app.get('/talker', async (_req, res) => {
     },
   );
 
+  app.delete(
+    '/talker/:id',
+    tokenValidate,
+    async (req, res) => {
+    const { id } = req.params;
+    const data = await readTalkers();
+    const talkerDeleted = data.filter((talker) => talker.id !== +id);    
+    await writeTalkers(JSON.stringify(talkerDeleted));
+    return res.status(204).json();
+    },
+  );
+
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
