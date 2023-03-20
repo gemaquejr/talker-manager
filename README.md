@@ -34,14 +34,14 @@ Instala as dependências.
 
 ### `Rodando a aplicação com o Docker:`
 
-Na pasta app do projeto, suba o container talker_manager utilizando o docker-compose.yml. Utilize o comando abaixo.
+Na pasta app do projeto, suba o container talker_manager utilizando o docker-compose.yml. Utilize o comando:
 
-   - docker-compose up -d
+   - `docker-compose up -d`
 
-Entre no terminal do container
+Entre no terminal do container e digite:
 
-   - docker exec -it talker_manager bash
+   - `docker exec -it talker_manager bash`
    
-Inicie o servidor
+Inicie o servidor:
 
-   - npm run dev
+   - `npm run dev`
