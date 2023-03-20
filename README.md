@@ -1,6 +1,6 @@
 # Talker Manager
 
-Essa aplicação é uma API RESTful de cadastro e desenvolvida em Node.js.
+Essa aplicação é uma API RESTful de cadastro desenvolvida em Node.js.
 
 ![preview](.github/preview.gif)
 
